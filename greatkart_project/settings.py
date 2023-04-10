@@ -72,6 +72,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'greatkart_project.wsgi.application'
 
+AUTH_USER_MODEL = 'accounts.Account'
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
