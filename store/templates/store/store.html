@@ -31,8 +31,13 @@
 			<div class="card-body">
 				
 				<ul class="list-menu">
+                    <li><a href="{% url 'store:all_products' %}">
+                            All Products</a>
+                    </li>
                     {% for category in categories %}
-                        <li><a href="{% url 'store:by_category' category.slug %}">{{ category.category_name }}</a></li>
+                        <li><a href="{% url 'store:by_category' category.slug %}">
+                            {{ category.category_name }}</a>
+                        </li>
                     {% endfor %}
 				</ul>
 
