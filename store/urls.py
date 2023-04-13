@@ -5,4 +5,5 @@ app_name = 'store'
 
 urlpatterns = [
     path('', StoreView.as_view(), name='main'),
+    path('<slug:category_slug>/', StoreView.as_view(), name='by_category')
 ]
