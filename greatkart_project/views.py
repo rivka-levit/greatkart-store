@@ -13,7 +13,7 @@ class HomeView(ListView):
 
     # def paginate_queryset(self):
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'GreatKart | One of the Biggest Online Shopping Platform'
         return context
