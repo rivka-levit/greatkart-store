@@ -12,4 +12,5 @@ class StoreView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'GreatKart | One of the Biggest Online Shopping Platform'
         context['categories'] = Category.objects.all()
+        context['products_count'] = self.get_queryset().count()
         return context
