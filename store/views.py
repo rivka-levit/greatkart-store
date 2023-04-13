@@ -10,7 +10,7 @@ class StoreView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        products = super(StoreView, self).get_queryset()
+        products = super(StoreView, self).get_queryset().filter(is_available=True)
         category_slug = self.kwargs.get('category_slug')
         if category_slug:
             category = get_object_or_404(Category, slug=category_slug)
@@ -19,7 +19,6 @@ class StoreView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'GreatKart | One of the Biggest Online Shopping Platform'
-        context['categories'] = Category.objects.all()
+        # context['categories'] = Category.objects.all()
         context['products_count'] = self.get_queryset().count()
         return context

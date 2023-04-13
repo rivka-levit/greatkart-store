@@ -12,8 +12,3 @@ class HomeView(ListView):
         return queryset.filter(is_available=True)
 
     # def paginate_queryset(self):
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'GreatKart | One of the Biggest Online Shopping Platform'
-        return context
