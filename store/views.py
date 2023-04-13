@@ -1,7 +1,7 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, View
 from .models import Product
 from category.models import Category
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 
 
 class StoreView(ListView):
@@ -21,3 +21,12 @@ class StoreView(ListView):
         context = super().get_context_data(**kwargs)
         context['products_count'] = self.get_queryset().count()
         return context
+
+
+class ProductDetailView(View):
+    def get(self, request, category_slug, product_slug):
+        product = Product.objects.get(category__slug=category_slug, slug=product_slug)
+        context = {
+            'product': product
+        }
+        return render(request, 'store/product-detail.html', context)

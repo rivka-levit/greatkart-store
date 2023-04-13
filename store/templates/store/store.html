@@ -135,13 +135,13 @@
         <div class="col-md-4">
             <figure class="card card-product-grid">
                 <div class="img-wrap">
-
-                    <img src="{{ product.images.url }}" alt="{{ product.product_name }}">
-
+                    <a href="{% url 'store:product_detail' product.category.slug product.slug %}" class="img-wrap">
+                        <img src="{{ product.images.url }}" alt="{{ product.product_name }}">
+                    </a>
                 </div> <!-- img-wrap.// -->
                 <figcaption class="info-wrap">
                     <div class="fix-height">
-                        <a href="./product-detail.html" class="title">{{ product.product_name }}</a>
+                        <a href="{% url 'store:product_detail' product.category.slug product.slug %}" class="title">{{ product.product_name }}</a>
                         <div class="price-wrap mt-2">
                             <span class="price">$ {{ product.price|floatformat:'2g' }}</span>
 {#                            <del class="price-old">$1980</del>#}
