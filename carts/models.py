@@ -3,7 +3,7 @@ from store.models import Product
 
 
 class Cart(models.Model):
-    name = models.CharField(max_length=50, blank=True)
+    cart_id = models.CharField(max_length=50, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -11,7 +11,7 @@ class Cart(models.Model):
         verbose_name_plural = 'carts'
 
     def __str__(self):
-        return self.name
+        return self.cart_id
 
 
 class CartItem(models.Model):
