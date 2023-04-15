@@ -45,4 +45,4 @@ def add_cart(request, product_id):
             quantity=1
         )
     cart_item.save()
-    return redirect(request.META['HTTP_REFERER'])
+    return redirect('cart:detail')
