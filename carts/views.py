@@ -52,3 +52,9 @@ def add_cart(request, product_id):
         )
     cart_item.save()
     return redirect('cart:detail')
+
+
+def remove_item(request, item_id):
+    item = CartItem.objects.get(id=item_id)
+    item.delete()
+    return redirect(request.META['HTTP_REFERER'])
