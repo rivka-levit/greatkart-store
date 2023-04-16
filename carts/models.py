@@ -13,6 +13,10 @@ class Cart(models.Model):
     def __str__(self):
         return self.cart_id
 
+    def total_cart(self):
+        if self.cart_items:
+            return sum([item.total_item() for item in self.cart_items.all()])
+
 
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -26,3 +30,6 @@ class CartItem(models.Model):
 
     def __str__(self):
         return self.product.product_name
+
+    def total_item(self):
+        return self.quantity * self.product.price

@@ -13,8 +13,13 @@ class CartView(ListView):
         user = self.request.user
         if user.is_authenticated is False:
             cart = _get_cart(self.request)
-            cart_items = super(CartView, self).get_queryset().filter(cart=cart)
+            cart_items = super(CartView, self).get_queryset().filter(cart=cart, is_active=True)
         return cart_items
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cart'] = _get_cart(self.request)
+        return context
 
 
 def _cart_id(request):
