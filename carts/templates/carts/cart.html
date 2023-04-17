@@ -38,14 +38,14 @@
                         <div class="col">
                             <div class="input-group input-spinner">
                                 <div class="input-group-prepend">
-                                <a href=""
-                                   class="btn btn-light" type="button" id="button-plus">
+                                <a href="{% url 'cart:decrement_item' item.id %}"
+                                   class="btn btn-light" type="button" id="button-minus">
                                     <i class="fa fa-minus"></i> </a>
                                 </div>
                                 <input type="text" class="form-control"  value="{{ item.quantity }}">
                                 <div class="input-group-append">
                                 <a href="{% url 'cart:add_cart' item.product.id %}"
-                                   class="btn btn-light" type="button" id="button-minus">
+                                   class="btn btn-light" type="button" id="button-plus">
                                     <i class="fa fa-plus"></i> </a>
                                 </div>
                             </div> <!-- input-group.// -->

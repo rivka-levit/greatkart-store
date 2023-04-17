@@ -31,6 +31,17 @@ def add_cart(request, product_id):
             quantity=1
         )
     cart_item.save()
+    return redirect(request.META['HTTP_REFERER'])
+
+
+def decrement_item(request, item_id):
+    cart = _get_cart(request)
+    item = CartItem.objects.get(id=item_id, cart=cart)
+    if item.quantity > 1:
+        item.quantity -= 1
+        item.save()
+    else:
+        item.delete()
     return redirect('cart:detail')
 
 
