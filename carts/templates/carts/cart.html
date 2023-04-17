@@ -80,11 +80,11 @@
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Tax:</dt>
-			  <dd class="text-right"> $ 0</dd>
+			  <dd class="text-right"> $ {{ cart.tax_cart|floatformat:'2g' }}</dd>
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Total:</dt>
-			  <dd class="text-right text-dark b"><strong>$ {{ cart.total_cart|floatformat:'2g' }}</strong></dd>
+			  <dd class="text-right text-dark b"><strong>$ {{ cart.grand_total_cart|floatformat:'2g' }}</strong></dd>
 			</dl>
 			<hr>
 			<p class="text-center mb-3">

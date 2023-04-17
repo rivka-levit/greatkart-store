@@ -17,6 +17,14 @@ class Cart(models.Model):
         if self.cart_items:
             return sum([item.total_item() for item in self.cart_items.all()])
 
+    def tax_cart(self):
+        if self.cart_items:
+            return 2 * self.total_cart() / 100
+
+    def grand_total_cart(self):
+        if self.cart_items:
+            return self.total_cart() + self.tax_cart()
+
 
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
