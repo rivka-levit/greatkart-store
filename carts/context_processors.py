@@ -18,11 +18,13 @@ def _get_cart(request):
 
 
 def cart_info(request) -> dict:
+    if 'admin' in request.path:
+        return dict()
     cart = _get_cart(request)
     if cart.cart_items:
         return dict(
             cart=cart,
             products_in_cart=[i.product for i in cart.cart_items.all()],
-            count=cart.cart_items.count()
+            cart_items_count=cart.cart_items.count()
         )
-    return dict(cart=cart, count=0)
+    return dict(cart=cart, cart_items_count=0)
