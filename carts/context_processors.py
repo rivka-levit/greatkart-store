@@ -17,8 +17,12 @@ def _get_cart(request):
     return cart
 
 
-def cart_items_count(request) -> dict:
+def cart_info(request) -> dict:
     cart = _get_cart(request)
     if cart.cart_items:
-        return dict(cart=cart, count=cart.cart_items.count())
+        return dict(
+            cart=cart,
+            products_in_cart=[i.product for i in cart.cart_items.all()],
+            count=cart.cart_items.count()
+        )
     return dict(cart=cart, count=0)

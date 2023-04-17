@@ -7,11 +7,17 @@
 <div class="container">
 
 <!-- ============================ COMPONENT 1 ================================= -->
+{% if not cart_items %}
+    <h2 class="text-center text-muted">Yor shopping cart is empty</h2>
+    <br>
+    <div class="text-center">
+        <a href="{% url 'store:all_products' %}" class="btn btn-primary-light">Continue shopping</a>
+    </div>
+{% else %}
 
 <div class="row">
 	<aside class="col-lg-9">
 <div class="card">
-{% if cart_items %}
 <table class="table table-borderless table-shopping-cart">
 <thead class="text-muted">
 <tr class="small text-uppercase">
@@ -28,7 +34,8 @@
             <figure class="itemside align-items-center">
                 <div class="aside"><img src="{{ item.product.images.url }}" class="img-sm"></div>
                 <figcaption class="info">
-                    <a href="#" class="title text-dark">{{ item.product.product_name }}</a>
+                    <a href="{% url 'store:product_detail' item.product.category.slug item.product.slug%}"
+                       class="title text-dark">{{ item.product.product_name }}</a>
     {#				<p class="text-muted small">Matrix: 25 Mpx <br> Brand: Canon</p>#}
                 </figcaption>
             </figure>
@@ -64,9 +71,7 @@
 {% endfor %}
 </tbody>
 </table>
-{% else %}
-    <h5 class="text-center text-muted">Yor cart is empty</h5>
-{% endif %}
+
 </div> <!-- card.// -->
 
 	</aside> <!-- col.// -->
@@ -91,13 +96,14 @@
 				<img src="{% static 'images/misc/payments.png' %}" height="26">
 			</p>
 			<a href="./place-order.html" class="btn btn-primary btn-block"> Checkout </a>
-			<a href="./store.html" class="btn btn-light btn-block">Continue Shopping</a>
+			<a href="{% url 'store:all_products' %}" class="btn btn-light btn-block">Continue Shopping</a>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
 
 </aside> <!-- col.// -->
 
 </div> <!-- row.// -->
+{% endif %}
 <!-- ============================ COMPONENT 1 END .// ================================= -->
 
 </div> <!-- container .//  -->

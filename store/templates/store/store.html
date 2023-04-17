@@ -150,8 +150,14 @@
                         {% endif %}
                     </div>
                     {% if product.stock > 0 %}
-                    <a href="{% url 'cart:add_cart' product.id %}" class="btn btn-block btn-primary">Add to cart </a>
-{#                    <a href="#" class="btn btn-block btn-success">Added to cart </a>#}
+                        {% if product in products_in_cart %}
+                            <a href="{% url 'cart:detail' %}" class="btn btn-block btn-success"> <span class="text">
+                                    Added to Cart
+                                </span>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'cart:add_cart' product.id %}" class="btn btn-block btn-primary">Add to Cart </a>
+                        {% endif %}
                     {% else %}
                         <h5 class="text-muted text-center">Out of Stock</h5>
                     {% endif %}

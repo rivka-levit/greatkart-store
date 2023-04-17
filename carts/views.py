@@ -23,7 +23,8 @@ def add_cart(request, product_id):
     cart = _get_cart(request)
     try:
         cart_item = CartItem.objects.get(product=product, cart=cart)
-        cart_item.quantity += 1
+        if product.stock > cart_item.quantity:
+            cart_item.quantity += 1
     except CartItem.DoesNotExist:
         cart_item = CartItem.objects.create(
             product=product,
@@ -35,8 +36,7 @@ def add_cart(request, product_id):
 
 
 def decrement_item(request, item_id):
-    cart = _get_cart(request)
-    item = CartItem.objects.get(id=item_id, cart=cart)
+    item = CartItem.objects.get(id=item_id)
     if item.quantity > 1:
         item.quantity -= 1
         item.save()
