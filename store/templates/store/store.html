@@ -141,7 +141,8 @@
                 </div> <!-- img-wrap.// -->
                 <figcaption class="info-wrap">
                     <div class="fix-height">
-                        <a href="{% url 'store:product_detail' product.category.slug product.slug %}" class="title">{{ product.product_name }}</a>
+                        <a href="{% url 'store:product_detail' product.category.slug product.slug %}"
+                           class="title">{{ product.product_name }}</a>
                         {% if product.stock > 0 %}
                         <div class="price-wrap mt-2">
                             <span class="price">$ {{ product.price|floatformat:'2g' }}</span>
@@ -151,12 +152,16 @@
                     </div>
                     {% if product.stock > 0 %}
                         {% if product in products_in_cart %}
-                            <a href="{% url 'cart:detail' %}" class="btn btn-block btn-success"> <span class="text">
+                            <a href="{% url 'store:product_detail' product.category.slug product.slug %}"
+                               class="btn btn-block btn-success"> <span class="text">
                                     Added to Cart
                                 </span>
                             </a>
                         {% else %}
-                            <a href="{% url 'cart:add_cart' product.id %}" class="btn btn-block btn-primary">Add to Cart </a>
+                            <a href="{% url 'cart:add_cart' product.id %}"
+                               class="btn btn-block btn-primary">
+                                Add to Cart
+                            </a>
                         {% endif %}
                     {% else %}
                         <h5 class="text-muted text-center">Out of Stock</h5>
