@@ -1,7 +1,8 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView
-from .models import Cart, CartItem
+from .models import CartItem
 from store.models import Product
+from .context_processors import _get_cart
 
 
 class CartView(ListView):
@@ -15,27 +16,6 @@ class CartView(ListView):
             cart = _get_cart(self.request)
             cart_items = super(CartView, self).get_queryset().filter(cart=cart, is_active=True)
         return cart_items
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['cart'] = _get_cart(self.request)
-        return context
-
-
-def _cart_id(request):
-    cart = request.session.session_key
-    if not cart:
-        cart = request.session.create()
-    return cart
-
-
-def _get_cart(request):
-    cart_id = _cart_id(request)
-    try:
-        cart = Cart.objects.get(cart_id=cart_id)
-    except Cart.DoesNotExist:
-        cart = Cart.objects.create(cart_id=cart_id)
-    return cart
 
 
 def add_cart(request, product_id):
