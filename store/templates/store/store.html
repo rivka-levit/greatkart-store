@@ -174,7 +174,7 @@
 
 </div> <!-- row end.// -->
 
-
+{% if is_paginated %}
 <nav class="mt-4" aria-label="Page navigation sample">
     <ul class="pagination">
         {% if page_obj.has_previous %}
@@ -206,7 +206,7 @@
         {% endif %}
     </ul>
 </nav>
-
+{% endif %}
 	</main> <!-- col.// -->
 
 </div>
