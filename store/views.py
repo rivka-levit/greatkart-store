@@ -39,7 +39,7 @@ class SearchResultsView(ListView):
     model = Product
     template_name = 'store/search-result.html'
     context_object_name = 'products'
-    paginate_by = 6
+    paginate_by = 1
     ordering = ['-created_date']
 
     def get_queryset(self):
@@ -54,4 +54,5 @@ class SearchResultsView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['products_count'] = self.get_queryset().count()
+        context['query'] = self.request.GET.get("q")
         return context
