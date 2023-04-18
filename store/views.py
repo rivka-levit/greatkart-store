@@ -42,5 +42,8 @@ class SearchResultsView(ListView):
     ordering = ['id']
 
     def get_queryset(self):
+        products = super(SearchResultsView, self).get_queryset().filter(is_available=True)
         query = self.request.GET.get("q")
-        return Product.objects.filter(is_available=True, product_name__contains=query)
+        if not query:
+            return None
+        return products.filter(product_name__contains=query)
