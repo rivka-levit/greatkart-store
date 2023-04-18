@@ -39,7 +39,7 @@ class SearchResultsView(ListView):
     model = Product
     template_name = 'store/search-result.html'
     context_object_name = 'products'
-    paginate_by = 1
+    paginate_by = 6
     ordering = ['-created_date']
 
     def get_queryset(self):
