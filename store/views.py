@@ -32,3 +32,15 @@ class ProductDetailView(View):
             'product': product
         }
         return render(request, 'store/product-detail.html', context)
+
+
+class SearchResultsView(ListView):
+    model = Product
+    template_name = 'store/search-result.html'
+    context_object_name = 'products'
+    paginate_by = 6
+    ordering = ['id']
+
+    def get_queryset(self):
+        query = self.request.GET.get("q")
+        return Product.objects.filter(is_available=True, product_name__contains=query)
