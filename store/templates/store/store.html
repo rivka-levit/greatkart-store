@@ -153,7 +153,7 @@
                     {% if product.stock > 0 %}
                         {% if product in products_in_cart %}
                             <a href="{% url 'store:product_detail' product.category.slug product.slug %}"
-                               class="btn btn-block btn-success"> <span class="text">
+                               class="btn btn-block btn-success disabled"> <span class="text">
                                     Added to Cart
                                 </span>
                             </a>
