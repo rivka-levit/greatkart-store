@@ -8,6 +8,7 @@ class StoreView(ListView):
     model = Product
     template_name = 'store/store.html'
     context_object_name = 'products'
+    paginate_by = 6
 
     def get_queryset(self):
         products = super(StoreView, self).get_queryset().filter(is_available=True)
