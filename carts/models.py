@@ -11,7 +11,7 @@ class Cart(models.Model):
         verbose_name_plural = 'carts'
 
     def __str__(self):
-        return self.cart_id
+        return str(self.cart_id)
 
     def total_cart(self):
         if self.cart_items:
@@ -38,7 +38,7 @@ class CartItem(models.Model):
         verbose_name_plural = 'cart items'
 
     def __str__(self):
-        return self.product.product_name
+        return str(self.product.product_name)
 
     def total_item(self):
         return self.quantity * self.product.price
