@@ -18,7 +18,7 @@
 		</aside>
 		<main class="col-md-6 border-left">
 
-<form action="{% url 'cart:add_cart' product.id %}" method="get">
+<form action="{% url 'cart:add_cart' product.id %}" method="post">
     {% csrf_token %}
     <article class="content-body">
     

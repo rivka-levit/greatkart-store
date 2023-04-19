@@ -56,4 +56,6 @@ class Variation(models.Model):
         verbose_name_plural = 'product variations'
 
     def __str__(self):
-        return f'{self.product.product_name} variation'
+        return f'{self.product.product_name}: ' \
+               f'{self.variation_category.capitalize()} - ' \
+               f'{self.variation_value.capitalize()}'
