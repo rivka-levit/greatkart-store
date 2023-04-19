@@ -19,6 +19,7 @@
 		<main class="col-md-6 border-left">
 
 <form action="{% url 'cart:add_cart' product.id %}" method="get">
+    {% csrf_token %}
     <article class="content-body">
     
     <h2 class="title">{{ product.product_name }}</h2>
@@ -35,9 +36,11 @@
             <div class="item-option-select">
                 <h6>Choose Color</h6>
                 <select name="color" class="form-control" required>
-                    <option value="" disabled selected>Choose Color</option>
-                    {% for variant in product.variations.all %}
-                        <option value="{{ variant.variation_value }}">{{ variant.variation_value }}</option>
+                    <option value="" disabled selected>Select</option>
+                    {% for variant in product.variations.colors %}
+                        <option value="{{ variant.variation_value|lower }}">
+                            {{ variant.variation_value|capfirst }}
+                        </option>
                     {% endfor %}
                 </select>
             </div>
@@ -46,9 +49,11 @@
             <div class="item-option-select">
                 <h6>Select Size</h6>
                 <select name="size" class="form-control" required>
-                    <option value="" disabled selected>Choose Size</option>
-                    {% for variant in product.variations.all %}
-                        <option value="{{ variant.variation_value }}">{{ variant.variation_value }}</option>
+                    <option value="" disabled selected>Select</option>
+                    {% for variant in product.variations.sizes %}
+                        <option value="{{ variant.variation_value|lower }}">
+                            {{ variant.variation_value|capfirst }}
+                        </option>
                     {% endfor %}
                 </select>
             </div>
