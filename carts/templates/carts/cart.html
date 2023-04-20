@@ -57,7 +57,7 @@
                                 </div>
                                 <input type="text" class="form-control"  value="{{ item.quantity }}">
                                 <div class="input-group-append">
-                                <a href="{% url 'cart:add_cart' item.product.id %}"
+                                <a href="{% url 'cart:increment_item' item.id %}"
                                    class="btn btn-light" type="button" id="button-plus">
                                     <i class="fa fa-plus"></i> </a>
                                 </div>

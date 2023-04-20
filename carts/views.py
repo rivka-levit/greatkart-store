@@ -18,20 +18,28 @@ class CartView(ListView):
         return cart_items
 
 
-def add_cart(request, product_id):
-    product = Product.objects.get(id=product_id)
-    cart = get_cart(request)
-    try:
-        cart_item = CartItem.objects.get(product=product, cart=cart)
-        if product.stock > cart_item.quantity:
-            cart_item.quantity += 1
-    except CartItem.DoesNotExist:
-        cart_item = CartItem.objects.create(
-            product=product,
-            cart=cart,
-            quantity=1
-        )
-    cart_item.save()
+# def add_cart(request, product_id):
+#     product = Product.objects.get(id=product_id)
+#     cart = get_cart(request)
+#     try:
+#         cart_item = CartItem.objects.get(product=product, cart=cart)
+#         if product.stock > cart_item.quantity:
+#             cart_item.quantity += 1
+#     except CartItem.DoesNotExist:
+#         cart_item = CartItem.objects.create(
+#             product=product,
+#             cart=cart,
+#             quantity=1
+#         )
+#     cart_item.save()
+#     return redirect(request.META['HTTP_REFERER'])
+
+def increment_item(request, item_id):
+    item = CartItem.objects.get(id=item_id)
+    product = item.product
+    if product.stock > item.quantity:
+        item.quantity += 1
+        item.save()
     return redirect(request.META['HTTP_REFERER'])
 
 
