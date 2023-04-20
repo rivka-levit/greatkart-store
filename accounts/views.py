@@ -1,4 +1,5 @@
 from django.views.generic.base import TemplateView
+from django.shortcuts import reverse
 
 
 class RegisterView(TemplateView):
@@ -7,3 +8,7 @@ class RegisterView(TemplateView):
 
 class LoginView(TemplateView):
     template_name = 'accounts/login.html'
+
+
+def logout(request):
+    return reverse('home')
