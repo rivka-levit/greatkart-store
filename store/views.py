@@ -37,7 +37,7 @@ class ProductDetailView(View):
         return render(request, 'store/product-detail.html', context)
 
     def post(self, request, category_slug, product_slug):
-        product = Product.objects.get(slug=product_slug)
+        product = Product.objects.get(category__slug=category_slug, slug=product_slug)
         product_variations = list()
         for key, value in request.POST.items():
             if key == 'csrfmiddlewaretoken':
@@ -55,16 +55,18 @@ class ProductDetailView(View):
                 for i in cart_items:
                     if product_variations == list(i.variations.all()):
                         item = CartItem.objects.get(product=product, id=i.id)
-                        if product.stock > item.quantity:
-                            item.quantity += 1
-                            item.save()
+                        break
             else:
                 item = CartItem.objects.create(product=product, cart=cart)
                 if product_variations:
                     item.variations.add(*product_variations)
-                if product.stock > item.quantity:
-                    item.quantity += 1
-                    item.save()
+        else:
+            item = CartItem.objects.create(product=product, cart=cart)
+            if product_variations:
+                item.variations.add(*product_variations)
+        if product.stock > item.quantity:
+            item.quantity += 1
+            item.save()
 
         return redirect(self.request.META['HTTP_REFERER'])
 
