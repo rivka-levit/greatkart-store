@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 from django.views.generic import ListView
 from .models import CartItem
 from store.models import Product
-from .context_processors import _get_cart
+from .context_processors import get_cart
 
 
 class CartView(ListView):
@@ -13,14 +13,14 @@ class CartView(ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated is False:
-            cart = _get_cart(self.request)
+            cart = get_cart(self.request)
             cart_items = super(CartView, self).get_queryset().filter(cart=cart, is_active=True)
         return cart_items
 
 
 def add_cart(request, product_id):
     product = Product.objects.get(id=product_id)
-    cart = _get_cart(request)
+    cart = get_cart(request)
     try:
         cart_item = CartItem.objects.get(product=product, cart=cart)
         if product.stock > cart_item.quantity:

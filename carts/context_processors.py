@@ -8,7 +8,7 @@ def _cart_id(request):
     return cart
 
 
-def _get_cart(request):
+def get_cart(request):
     cart_id = _cart_id(request)
     try:
         cart = Cart.objects.get(cart_id=cart_id)
@@ -20,7 +20,7 @@ def _get_cart(request):
 def cart_info(request) -> dict:
     if 'admin' in request.path:
         return dict()
-    cart = _get_cart(request)
+    cart = get_cart(request)
     if cart.cart_items:
         return dict(
             cart=cart,

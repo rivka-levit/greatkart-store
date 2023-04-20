@@ -1,8 +1,10 @@
 from django.views.generic import ListView, View
-from .models import Product
+from carts.context_processors import get_cart
+from .models import Product, Variation
 from category.models import Category
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
+from carts.models import CartItem
 
 
 class StoreView(ListView):
@@ -33,6 +35,38 @@ class ProductDetailView(View):
             'product': product
         }
         return render(request, 'store/product-detail.html', context)
+
+    def post(self, request, category_slug, product_slug):
+        product = Product.objects.get(slug=product_slug)
+        product_variations = list()
+        for key, value in request.POST.items():
+            if key == 'csrfmiddlewaretoken':
+                continue
+            else:
+                variation = Variation.objects.get(product=product,
+                                                  variation_category__iexact=key,
+                                                  variation_value__iexact=value)
+                product_variations.append(variation)
+
+        cart = get_cart(request)
+        if CartItem.objects.filter(product=product, cart=cart).exists():
+            cart_items = CartItem.objects.filter(product=product, cart=cart)
+            if any(product_variations == list(x.variations.all()) for x in cart_items):
+                for i in cart_items:
+                    if product_variations == list(i.variations.all()):
+                        item = CartItem.objects.get(product=product, id=i.id)
+                        if product.stock > item.quantity:
+                            item.quantity += 1
+                            item.save()
+            else:
+                item = CartItem.objects.create(product=product, cart=cart)
+                if product_variations:
+                    item.variations.add(*product_variations)
+                if product.stock > item.quantity:
+                    item.quantity += 1
+                    item.save()
+
+        return redirect(self.request.META['HTTP_REFERER'])
 
 
 class SearchResultsView(ListView):
