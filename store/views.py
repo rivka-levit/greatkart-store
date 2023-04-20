@@ -40,13 +40,13 @@ class ProductDetailView(View):
         product = Product.objects.get(category__slug=category_slug, slug=product_slug)
         product_variations = list()
         for key, value in request.POST.items():
-            if key == 'csrfmiddlewaretoken':
-                continue
-            else:
+            try:
                 variation = Variation.objects.get(product=product,
                                                   variation_category__iexact=key,
                                                   variation_value__iexact=value)
                 product_variations.append(variation)
+            except:
+                pass
 
         cart = get_cart(request)
         if CartItem.objects.filter(product=product, cart=cart).exists():
