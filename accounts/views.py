@@ -1,17 +1,18 @@
 from django.views.generic.base import TemplateView
+from django.views import View
 from django.views.generic.edit import CreateView
 from .forms import RegistrationForm
 from .models import Account
-from django.shortcuts import reverse, redirect
+from django.shortcuts import reverse, redirect, render
 
 
-class RegisterView(CreateView):
-    model = Account
-    template_name = 'accounts/register.html'
-    form_class = RegistrationForm
+class RegisterView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'accounts/register.html', context={
+            'form': RegistrationForm()
+        })
 
     def post(self, request, *args, **kwargs):
-        super(RegisterView, self).post(request)
         form = RegistrationForm(request.POST)
         if form.is_valid():
             first_name = form.cleaned_data['first_name']
@@ -29,7 +30,7 @@ class RegisterView(CreateView):
             )
             user.phone_number = phone_number
             user.save()
-        return redirect('accounts:login')
+        return redirect('home')
 
 
 class LoginView(TemplateView):
