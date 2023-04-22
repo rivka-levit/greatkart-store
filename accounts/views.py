@@ -3,6 +3,7 @@ from django.views import View
 from .forms import RegistrationForm
 from .models import Account
 from django.shortcuts import reverse, redirect, render
+from django.contrib import messages
 
 
 class RegisterView(View):
@@ -24,7 +25,13 @@ class RegisterView(View):
             )
             user.phone_number = form.cleaned_data['phone_number']
             user.save()
-        return redirect('home')
+            messages.success(request, 'Registration successful!')
+        else:
+            if form.errors.get('__all__'):
+                messages.add_message(request, messages.ERROR, form.errors['__all__'])
+            if form.errors.get('email'):
+                messages.add_message(request, messages.ERROR, form.errors['email'])
+        return redirect('accounts:register')
 
 
 class LoginView(TemplateView):

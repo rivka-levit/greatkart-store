@@ -7,10 +7,10 @@
 <!-- ============================ COMPONENT REGISTER   ================================= -->
 	<div class="card mx-auto" style="max-width:520px; margin-top:40px;">
       <article class="card-body">
+          {% include 'accounts/includes/alerts.html' %}
 		<header class="mb-4"><h4 class="card-title">Sign up</h4></header>
 		<form action="{% url 'accounts:register' %}" method="post">
             {% csrf_token %}
-
 				<div class="form-row">
 					<div class="col form-group">
 						<label>First name <span style="color: red">*</span></label>
