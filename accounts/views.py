@@ -1,9 +1,9 @@
-from django.views.generic.base import TemplateView
 from django.views import View
 from .forms import RegistrationForm
 from .models import Account
 from django.shortcuts import reverse, redirect, render
 from django.contrib import messages
+from django.contrib import auth
 
 
 class RegisterView(View):
@@ -34,8 +34,22 @@ class RegisterView(View):
         return redirect('accounts:register')
 
 
-class LoginView(TemplateView):
-    template_name = 'accounts/login.html'
+class LoginView(View):
+    def get(self, request):
+        return render(request, 'accounts/login.html')
+
+    def post(self, request):
+        email = request.POST['email']
+        password = request.POST['password']
+
+        user = auth.authenticate(email=email, password=password)
+
+        if user:
+            auth.login(request, user)
+            # messages.success(request, 'You have logged in successfully!')
+            return redirect('home')
+        messages.error(request, 'Invalid login credentials!')
+        return redirect('accounts:login')
 
 
 def logout(request):
