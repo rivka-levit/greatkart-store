@@ -4,6 +4,7 @@ from .models import Account
 from django.shortcuts import reverse, redirect, render
 from django.contrib import messages
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 
 class RegisterView(View):
@@ -52,5 +53,8 @@ class LoginView(View):
         return redirect('accounts:login')
 
 
+@login_required(login_url='accounts:login')
 def logout(request):
-    return reverse('home')
+    auth.logout(request)
+    messages.success(request, 'You have logged out successfully')
+    return redirect('accounts:login')
