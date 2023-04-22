@@ -5,8 +5,8 @@
         <button type="button" class="close" data-dismiss="alert">
             <span aria-hidden="true">&times;</span>
         </button>
-             {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-             {{ message }}
+{#             {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}#}
+             <p>{{ message|striptags }}</p>
         </div>
     </div>
     {% endfor %}
