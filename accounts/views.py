@@ -1,10 +1,12 @@
 from django.views import View
+from django.views.generic.base import TemplateView
 from .forms import RegistrationForm
 from .models import Account
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Verification email
 from django.contrib.sites.shortcuts import get_current_site
@@ -97,3 +99,9 @@ def activate(request, uidb64, token):
         return redirect('accounts:login')
     messages.error(request, 'Invalid activation link!')
     return redirect('accounts:register')
+
+
+class DashboardView(LoginRequiredMixin, TemplateView):
+    template_name = 'accounts/dashboard.html'
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
