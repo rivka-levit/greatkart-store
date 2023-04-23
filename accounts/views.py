@@ -72,8 +72,8 @@ class LoginView(View):
 
         if user:
             auth.login(request, user)
-            # messages.success(request, 'You have logged in successfully!')
-            return redirect('home')
+            messages.success(request, 'You have logged in successfully!')
+            return redirect('accounts:dashboard')
         messages.error(request, 'Invalid login credentials!')
         return redirect('accounts:login')
 
