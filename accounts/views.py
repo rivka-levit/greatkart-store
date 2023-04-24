@@ -101,6 +101,10 @@ def activate(request, uidb64, token):
     return redirect('accounts:register')
 
 
+def forgot_password(request):
+    return render(request, 'accounts/forgot_password.html')
+
+
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/dashboard.html'
     login_url = '/accounts/login/'
