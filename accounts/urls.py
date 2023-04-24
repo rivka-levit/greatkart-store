@@ -12,7 +12,7 @@ urlpatterns = [
     path('', DashboardView.as_view(), name='dashboard'),
     path('activate/<uidb64>/<token>/', activate, name='activate'),
     path('forgot_password/', ForgotPassword.as_view(), name='forgot_password'),
-    path('reset_password/', ResetPassword.as_view(), name='reset_password'),
     path('reset_password_validate/<uidb64>/<token>/', reset_password_validate,
          name='reset_password_validate'),
+    path('reset_password/', ResetPassword.as_view(), name='reset_password'),
 ]

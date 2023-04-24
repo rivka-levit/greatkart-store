@@ -110,8 +110,9 @@ def reset_password_validate(request, uidb64, token):
     if user and default_token_generator.check_token(user, token):
         request.session['uid'] = uid
         messages.success(request, 'Please, reset your password!')
-        return redirect('accounts:reset_password_validate')
+        return redirect('accounts:reset_password')
     messages.error(request, 'This link has been expired!')
+    return redirect('accounts:login')
 
 
 class ForgotPassword(View):
@@ -148,6 +149,20 @@ class ForgotPassword(View):
 class ResetPassword(View):
     def get(self, request):
         return render(request, 'accounts/reset_password.html')
+
+    def post(self, request):
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            uid = request.session.get('uid')
+            user = Account.objects.get(pk=uid)
+            user.set_password(password)
+            user.save()
+            messages.success(request, 'Password reset successfully!')
+            return redirect('accounts:login')
+        messages.error(request, 'Password does not match!')
+        return redirect('accounts:reset_password')
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
