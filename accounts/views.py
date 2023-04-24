@@ -101,8 +101,53 @@ def activate(request, uidb64, token):
     return redirect('accounts:register')
 
 
-def forgot_password(request):
-    return render(request, 'accounts/forgot_password.html')
+def reset_password_validate(request, uidb64, token):
+    uid = urlsafe_base64_decode(uidb64).decode()
+    try:
+        user = Account._default_manager.get(id=uid)
+    except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
+    if user and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid
+        messages.success(request, 'Please, reset your password!')
+        return redirect('accounts:reset_password_validate')
+    messages.error(request, 'This link has been expired!')
+
+
+class ForgotPassword(View):
+    def get(self, request):
+        return render(request, 'accounts/forgot_password.html')
+
+    def post(self, request):
+        email = request.POST['email']
+        if Account.objects.filter(email=email).exists():
+            user = Account.objects.get(email__exact=email)
+
+            # Reset password email
+            current_site = get_current_site(request)
+            mail_subject = 'Reset your password!'
+            message = render_to_string('accounts/reset_password_email.html', {
+                'user': user,
+                'domain': current_site,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user)
+            })
+            to_email = email
+            send_email = EmailMessage(mail_subject, message, to=[to_email])
+            send_email.send()
+
+            messages.success(request,
+                             'Password reset email has been sent '
+                             'to your email address!')
+            return redirect('accounts:login')
+        else:
+            messages.error(request, 'Account does not exist!')
+            return redirect('accounts:forgot_password')
+
+
+class ResetPassword(View):
+    def get(self, request):
+        return render(request, 'accounts/reset_password.html')
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
