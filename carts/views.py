@@ -1,5 +1,5 @@
-from django.shortcuts import redirect
-from django.views.generic import ListView
+from django.shortcuts import redirect, render
+from django.views.generic import ListView, View
 from .models import CartItem
 from store.models import Product
 from .context_processors import get_cart
@@ -16,6 +16,17 @@ class CartView(ListView):
             cart = get_cart(self.request)
             cart_items = super(CartView, self).get_queryset().filter(cart=cart, is_active=True)
         return cart_items
+
+
+class CheckoutView(View):
+    def get(self, request):
+        user = self.request.user
+        if user.is_authenticated is False:
+            cart = get_cart(self.request)
+            cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        return render(request, 'carts/checkout.html', context={
+            'cart_items': cart_items
+        })
 
 
 # def add_cart(request, product_id):
