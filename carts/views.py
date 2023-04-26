@@ -1,8 +1,8 @@
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, View
 from .models import CartItem
-from store.models import Product
 from .context_processors import get_cart
+from  django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class CartView(ListView):
@@ -18,7 +18,10 @@ class CartView(ListView):
         return cart_items
 
 
-class CheckoutView(View):
+class CheckoutView(LoginRequiredMixin, View):
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
+
     def get(self, request):
         user = self.request.user
         if user.is_authenticated is False:
