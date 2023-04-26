@@ -2,6 +2,8 @@ from django.views import View
 from django.views.generic.base import TemplateView
 from .forms import RegistrationForm
 from .models import Account
+from carts.models import CartItem
+from carts.context_processors import get_cart
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib import auth
@@ -71,6 +73,15 @@ class LoginView(View):
         user = auth.authenticate(email=email, password=password)
 
         if user:
+            try:
+                cart = get_cart(request)
+                if CartItem.objects.filter(cart=cart).exists():
+                    cart_items = CartItem.objects.filter(cart=cart)
+                    for item in cart_items:
+                        item.user = user
+                        item.save()
+            except:
+                pass
             auth.login(request, user)
             messages.success(request, 'You have logged in successfully!')
             return redirect('accounts:dashboard')
