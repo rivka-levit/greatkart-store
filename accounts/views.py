@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView
 from .forms import RegistrationForm
 from .models import Account
 from carts.models import CartItem
-from carts.context_processors import get_cart
+from carts.views import get_cart
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib import auth

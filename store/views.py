@@ -1,5 +1,5 @@
 from django.views.generic import ListView, View
-from carts.context_processors import get_cart
+from carts.views import get_cart
 from .models import Product, Variation
 from category.models import Category
 from django.shortcuts import get_object_or_404, render, redirect

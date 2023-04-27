@@ -1,27 +1,4 @@
-from .models import Cart, CartItem
-
-
-def _cart_id(request):
-    cart = request.session.session_key
-    if not cart:
-        cart = request.session.create()
-    return cart
-
-
-def get_cart(request):
-    cart_id = _cart_id(request)
-    try:
-        cart = Cart.objects.get(cart_id=cart_id)
-    except Cart.DoesNotExist:
-        cart = Cart.objects.create(cart_id=cart_id)
-    user = request.user
-    if user.id:
-        items = CartItem.objects.filter(user=user)
-        if items:
-            for item in items:
-                item.cart = cart
-                item.save()
-    return cart
+from .views import get_cart
 
 
 def cart_info(request) -> dict:

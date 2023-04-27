@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, render
 from django.views.generic import ListView, View
-from .models import CartItem
-from .context_processors import get_cart
+from .models import CartItem, Cart
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -28,21 +27,28 @@ class CheckoutView(LoginRequiredMixin, View):
         })
 
 
-# def add_cart(request, product_id):
-#     product = Product.objects.get(id=product_id)
-#     cart = get_cart(request)
-#     try:
-#         cart_item = CartItem.objects.get(product=product, cart=cart)
-#         if product.stock > cart_item.quantity:
-#             cart_item.quantity += 1
-#     except CartItem.DoesNotExist:
-#         cart_item = CartItem.objects.create(
-#             product=product,
-#             cart=cart,
-#             quantity=1
-#         )
-#     cart_item.save()
-#     return redirect(request.META['HTTP_REFERER'])
+def _cart_id(request):
+    cart = request.session.session_key
+    if not cart:
+        cart = request.session.create()
+    return cart
+
+
+def get_cart(request):
+    cart_id = _cart_id(request)
+    try:
+        cart = Cart.objects.get(cart_id=cart_id)
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(cart_id=cart_id)
+    user = request.user
+    if user.id:
+        items = CartItem.objects.filter(user=user)
+        if items:
+            for item in items:
+                item.cart = cart
+                item.save()
+    return cart
+
 
 def increment_item(request, item_id):
     item = CartItem.objects.get(id=item_id)
