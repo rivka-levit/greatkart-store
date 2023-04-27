@@ -51,9 +51,15 @@ class ProductDetailView(View):
         cart = get_cart(request)
         if CartItem.objects.filter(product=product, cart=cart).exists():
             cart_items = CartItem.objects.filter(product=product, cart=cart)
-            if any(product_variations == list(x.variations.all()) for x in cart_items):
+            if any(sorted(product_variations,
+                          key=lambda x: x.variation_category) ==
+                   sorted(list(x.variations.all()),
+                          key=lambda y: y.variation_category) for x in cart_items):
                 for i in cart_items:
-                    if product_variations == list(i.variations.all()):
+                    if sorted(product_variations,
+                              key=lambda x: x.variation_category) == \
+                        sorted(list(i.variations.all()),
+                               key=lambda x: x.variation_category):
                         item = CartItem.objects.get(product=product, id=i.id)
                         break
             else:

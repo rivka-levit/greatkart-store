@@ -41,7 +41,7 @@ def get_cart(request):
     except Cart.DoesNotExist:
         cart = Cart.objects.create(cart_id=cart_id)
     user = request.user
-    if user.id:
+    if user.is_authenticated:
         items = CartItem.objects.filter(user=user)
         if items:
             for item in items:
