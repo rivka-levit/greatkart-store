@@ -73,15 +73,24 @@ class LoginView(View):
         user = auth.authenticate(email=email, password=password)
 
         if user:
-            try:
-                cart = get_cart(request)
-                if CartItem.objects.filter(cart=cart).exists():
-                    cart_items = CartItem.objects.filter(cart=cart)
-                    for item in cart_items:
-                        item.user = user
-                        item.save()
-            except:
-                pass
+            cart = get_cart(request)
+            user_items = CartItem.objects.filter(user=user)
+            if CartItem.objects.filter(cart=cart).exists():
+                cart_items = CartItem.objects.filter(cart=cart)
+                u_items_to_del = list()
+                for item in cart_items:
+                    if user_items.exists():
+                        for u_item in user_items:
+                            if u_item.product == item.product and \
+                                    list(u_item.variations.all()) == list(item.variations.all()):
+                                item.quantity += u_item.quantity
+                                u_items_to_del.append(u_item)
+                                break
+                    item.user = user
+                    item.save()
+                if u_items_to_del:
+                    for ui in u_items_to_del:
+                        ui.delete()
             auth.login(request, user)
             messages.success(request, 'You have logged in successfully!')
             return redirect('accounts:dashboard')

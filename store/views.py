@@ -70,6 +70,9 @@ class ProductDetailView(View):
             item = CartItem.objects.create(product=product, cart=cart)
             if product_variations:
                 item.variations.add(*product_variations)
+        user = request.user
+        if user.is_authenticated:
+            item.user = user
         if product.stock > item.quantity:
             item.quantity += 1
             item.save()
