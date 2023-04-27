@@ -12,7 +12,8 @@ class CartView(ListView):
 
     def get_queryset(self):
         cart = get_cart(self.request)
-        return super(CartView, self).get_queryset().filter(cart=cart, is_active=True)
+        cart_items = super(CartView, self).get_queryset().filter(cart=cart, is_active=True)
+        return cart_items
 
 
 class CheckoutView(LoginRequiredMixin, View):

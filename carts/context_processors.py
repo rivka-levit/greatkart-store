@@ -1,4 +1,4 @@
-from .models import Cart
+from .models import Cart, CartItem
 
 
 def _cart_id(request):
@@ -14,6 +14,13 @@ def get_cart(request):
         cart = Cart.objects.get(cart_id=cart_id)
     except Cart.DoesNotExist:
         cart = Cart.objects.create(cart_id=cart_id)
+    user = request.user
+    if user.id:
+        items = CartItem.objects.filter(user=user)
+        if items:
+            for item in items:
+                item.cart = cart
+                item.save()
     return cart
 
 
