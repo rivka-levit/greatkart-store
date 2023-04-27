@@ -72,6 +72,7 @@ class LoginView(View):
 
         user = auth.authenticate(email=email, password=password)
 
+        # Group with existing items in profile
         if user:
             cart = get_cart(request)
             user_items = CartItem.objects.filter(user=user)
@@ -82,13 +83,16 @@ class LoginView(View):
                     if user_items.exists():
                         for u_item in user_items:
                             if u_item.product == item.product and \
-                                    list(u_item.variations.all()) == list(item.variations.all()):
+                                    sorted(list(u_item.variations.all()),
+                                           key=lambda x: x.variation_category) == \
+                                    sorted(list(item.variations.all()),
+                                           key=lambda x: x.variation_category):
                                 item.quantity += u_item.quantity
                                 u_items_to_del.append(u_item)
                                 break
-                    item.user = user
+                    item.user = user    # Assign item to user
                     item.save()
-                if u_items_to_del:
+                if u_items_to_del:    # Delete duplicates
                     for ui in u_items_to_del:
                         ui.delete()
             auth.login(request, user)
