@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import Account
+from store.models import Product, Variation
 
 
 class Payment(models.Model):
@@ -34,8 +35,8 @@ class Order(models.Model):
     country = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
-    total = models.DecimalField(decimal_places=2)
-    tax = models.DecimalField(decimal_places=2)
+    total = models.DecimalField(max_digits=8, decimal_places=2)
+    tax = models.DecimalField(max_digits=8, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='New')
     ip = models.CharField(max_length=20, blank=True)
     order_note = models.CharField(max_length=100, blank=True)
@@ -45,3 +46,25 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.user.first_name} -- Order number: {self.order_number}'
+
+
+class OrderProduct(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    variations = models.ForeignKey(Variation, on_delete=models.CASCADE, null=True, blank=True)
+    color = models.CharField(max_length=50)
+    size = models.CharField(max_length=50)
+    is_ordered = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    product_price = models.DecimalField(max_digits=8, decimal_places=2)
+    quantity = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'order product'
+        verbose_name_plural = 'order products'
+
+    def __str__(self):
+        return self.product.product_name
