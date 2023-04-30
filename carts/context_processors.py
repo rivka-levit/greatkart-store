@@ -8,7 +8,6 @@ def cart_info(request) -> dict:
     if cart.cart_items:
         return dict(
             cart=cart,
-            # products_in_cart=[i.product for i in cart.cart_items.all()],
             cart_items_count=cart.cart_items.count()
         )
     return dict(cart=cart, cart_items_count=0)

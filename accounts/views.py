@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+import requests
 
 # Verification email
 from django.contrib.sites.shortcuts import get_current_site
@@ -105,6 +106,12 @@ class LoginView(View):
                         ui.delete()
             auth.login(request, user)
             messages.success(request, 'You have logged in successfully!')
+            url = request.META.get('HTTP_REFERER')
+            query = requests.utils.urlparse(url).query
+            if query:
+                params = dict(x.split('=') for x in query.split('&'))
+                if 'redirect_to' in params:
+                    return redirect(params['redirect_to'])
             return redirect('accounts:dashboard')
         messages.error(request, 'Invalid login credentials!')
         return redirect('accounts:login')
