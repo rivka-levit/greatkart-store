@@ -73,9 +73,8 @@ class ProductDetailView(View):
         user = request.user
         if user.is_authenticated:
             item.user = user
-        if product.stock > item.quantity:
-            item.quantity += 1
-            item.save()
+        item.quantity += 1
+        item.save()
 
         return redirect(self.request.META['HTTP_REFERER'])
 

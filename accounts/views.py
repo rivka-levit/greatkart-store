@@ -75,24 +75,32 @@ class LoginView(View):
         # Group with existing items in profile
         if user:
             cart = get_cart(request)
+            cart_items = CartItem.objects.filter(cart=cart)
             user_items = CartItem.objects.filter(user=user)
-            if CartItem.objects.filter(cart=cart).exists():
-                cart_items = CartItem.objects.filter(cart=cart)
+            if cart_items.exists():
                 u_items_to_del = list()
-                for item in cart_items:
+                for item in cart_items:         # Loop through anonymous user items
                     if user_items.exists():
-                        for u_item in user_items:
+                        for u_item in user_items:   # Loop through authenticated user items
+
+                            # Find the same item with the same variations
                             if u_item.product == item.product and \
                                     sorted(list(u_item.variations.all()),
                                            key=lambda x: x.variation_category) == \
                                     sorted(list(item.variations.all()),
                                            key=lambda x: x.variation_category):
+
+                                # Quantity of both identical items to one of them
                                 item.quantity += u_item.quantity
                                 u_items_to_del.append(u_item)
                                 break
-                    item.user = user    # Assign item to user
+
+                    # Assign item to user
+                    item.user = user
                     item.save()
-                if u_items_to_del:    # Delete duplicates
+
+                # Delete duplicates whose quantity has been assigned to user items
+                if u_items_to_del:
                     for ui in u_items_to_del:
                         ui.delete()
             auth.login(request, user)
