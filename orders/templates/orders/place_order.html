@@ -9,6 +9,7 @@
 <!-- ============================ COMPONENT 1 ================================= -->
 <form action="{% url 'orders:place_order' %}" method="post">
 {% csrf_token %}
+{% include 'accounts/includes/alerts.html' %}
 <div class="row">
 
 	<aside class="col-lg-6">

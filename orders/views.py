@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 import datetime
+from django.contrib import messages
 
 from carts.models import CartItem
 from carts.views import get_cart
@@ -52,3 +53,5 @@ class PlaceOrderView(LoginRequiredMixin, View):
             data.order_number = order_number
             data.save()
             return redirect(request.META.get('HTTP_REFERER'))
+        messages.error(self.request, 'Invalid delivery information!')
+        return redirect(request.META.get('HTTP_REFERER'))
