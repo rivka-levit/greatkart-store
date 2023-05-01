@@ -1,7 +1,6 @@
-from django.shortcuts import redirect, render
-from django.views.generic import ListView, View
+from django.shortcuts import redirect
+from django.views.generic import ListView
 from .models import CartItem, Cart
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class CartView(ListView):
@@ -13,18 +12,6 @@ class CartView(ListView):
         cart = get_cart(self.request)
         cart_items = super(CartView, self).get_queryset().filter(cart=cart, is_active=True)
         return cart_items
-
-
-class CheckoutView(LoginRequiredMixin, View):
-    login_url = '/accounts/login/'
-    redirect_field_name = 'redirect_to'
-
-    def get(self, request):
-        cart = get_cart(self.request)
-        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
-        return render(request, 'carts/checkout.html', context={
-            'cart_items': cart_items
-        })
 
 
 def _cart_id(request):
