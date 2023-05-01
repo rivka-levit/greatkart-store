@@ -7,13 +7,14 @@
 <div class="container">
 
 <!-- ============================ COMPONENT 1 ================================= -->
-
+<form action="" method="post">
 <div class="row">
+
 	<aside class="col-lg-6">
 <div class="card">
     <div class="card-body">
         <h4 class="card-title mb-4">Billing Address</h4>
-        <form action="">
+
             <div class="form-row">
                 <div class="col form-group">
                     <label for="">First Name</label>
@@ -62,7 +63,7 @@
                 <label for="">Order Note</label>
                 <textarea name="order_note" rows="2" class="form-control"></textarea>
             </div>
-        </form>
+
     </div>
 </div> <!-- card.// -->
 
@@ -111,15 +112,16 @@
                 {% endfor %}
                 </tbody>
             </table>
-			<a href="./place-order.html" class="btn btn-primary btn-block"> Place Order </a>
+			<button type="submit" class="btn btn-primary btn-block"> Place Order </button>
 			<a href="{% url 'store:all_products' %}" class="btn btn-light btn-block">Continue Shopping</a>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
 
 </aside> <!-- col.// -->
 
-</div> <!-- row.// -->
 
+</div> <!-- row.// -->
+</form>
 <!-- ============================ COMPONENT 1 END .// ================================= -->
 
 </div> <!-- container .//  -->
