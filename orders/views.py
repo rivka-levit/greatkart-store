@@ -1,13 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import TemplateView
 import datetime
 from django.contrib import messages
 
 from carts.models import CartItem
 from carts.views import get_cart
 
-from .models import Order
+from .models import Order, OrderProduct
 from .forms import OrderForm
 
 
@@ -50,8 +51,20 @@ class PlaceOrderView(LoginRequiredMixin, View):
             dt = datetime.date.today()
             current_date = dt.strftime('%Y%m%d')
             order_number = f'{current_date}{data.id}'
+
             data.order_number = order_number
             data.save()
-            return redirect(request.META.get('HTTP_REFERER'))
+
+            return render(request, 'orders/payment.html', context={
+                'order': Order.objects.get(user=self.request.user,
+                                           is_ordered=False,
+                                           order_number=order_number),
+                'cart_items': CartItem.objects.filter(cart=cart, user=request.user)
+            })
+
         messages.error(self.request, 'Invalid delivery information!')
         return redirect(request.META.get('HTTP_REFERER'))
+
+
+class PaymentView(TemplateView):
+    template_name = 'orders/payment.html'
