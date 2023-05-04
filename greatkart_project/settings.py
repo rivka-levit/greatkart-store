@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'category.context_processors.category_links',
                 'carts.context_processors.cart_info',
+                'greatkart_project.context_processors.client'
             ],
         },
     },
@@ -150,3 +151,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = email_address
 EMAIL_HOST_PASSWORD = email_password
 EMAIL_USE_TLS = True
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'

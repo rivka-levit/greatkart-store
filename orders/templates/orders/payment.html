@@ -107,10 +107,14 @@
 			  <dd class="text-right text-dark b"><strong>$ {{ cart.grand_total_cart|floatformat:'2g' }}</strong></dd>
 			</dl>
 			<hr>
-			<p class="text-center mb-3">
-				<img src="{% static 'images/misc/payments.png' %}" height="26">
-			</p>
-			<a href="#" class="btn btn-primary btn-block"> Make Payment </a>
+{#			<p class="text-center mb-3">#}
+{#				<img src="{% static 'images/misc/payments.png' %}" height="26">#}
+{#			</p>#}
+
+			<div id="paypal-button-container">
+                <!-- PayPal button will load -->
+            </div>
+
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
 
@@ -122,4 +126,70 @@
 </div> <!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
+
+<script>
+
+    let amount = {{ cart.grand_total_cart }}
+
+    const appClientId = '{{ clientID }}'
+
+    // Render the PayPal button
+
+    paypal.Button.render({
+
+        // Set your environment
+
+        env: 'sandbox', // sandbox | production
+
+        // Specify the style of the button
+
+        style: {
+            layout: 'vertical',  // horizontal | vertical
+            size:   'responsive',    // medium | large | responsive
+            shape:  'rect',      // pill | rect
+            color:  'gold'       // gold | blue | silver | black
+        },
+
+        // Specify allowed and disallowed funding sources
+        //
+        // Options:
+        // - paypal.FUNDING.CARD
+        // - paypal.FUNDING.CREDIT
+        // - paypal.FUNDING.ELV
+
+        funding: {
+            allowed: [ paypal.FUNDING.CARD, paypal.FUNDING.CREDIT ],
+            disallowed: [ ]
+        },
+
+        // PayPal Client IDs - replace with your own
+        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+
+        client: {
+            sandbox: appClientId,
+            production: '<insert production client id>'
+        },
+
+        payment: function(data, actions) {
+            return actions.payment.create({
+                payment: {
+                    transactions: [
+                        {
+                            amount: { total: amount, currency: 'USD' }
+                        }
+                    ]
+                }
+            });
+        },
+
+        onAuthorize: function(data, actions) {
+            return actions.payment.execute().then(function() {
+                window.alert('Payment Complete!');
+            });
+        }
+
+    }, '#paypal-button-container');
+
+</script>
+
 {% endblock %}
