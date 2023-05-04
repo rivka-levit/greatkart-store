@@ -12,8 +12,6 @@ from carts.views import get_cart
 from .models import Order, OrderProduct
 from .forms import OrderForm
 
-from greatkart_project.secret_key import app_client_id
-
 
 class PlaceOrderView(LoginRequiredMixin, View):
     login_url = '/accounts/login/'
