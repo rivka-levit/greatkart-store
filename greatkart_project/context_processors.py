@@ -1,4 +1,4 @@
-from .secret_key import app_client_id
+from .secrets import app_client_id
 
 
 def client(request):

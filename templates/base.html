@@ -30,7 +30,10 @@
 <script src="{%  static 'js/script.js' %}" type="text/javascript"></script>
 
 <!-- paypal button javascript -->
-<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script>
+    const appClientID = '{{ clientID }}';
+    document.write("\<script src='" + "https://www.paypal.com/sdk/js?client-id=" + appClientID + "&currency=USD" + "'\>\</script\>");
+</script>
 
 <script type="text/javascript">
 /// some script
@@ -54,4 +57,5 @@ $(document).ready(function() {
 {% include 'includes/footer.html' %}
 
 </body>
+
 </html>

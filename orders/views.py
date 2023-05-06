@@ -2,14 +2,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import TemplateView
 import datetime
+import json
 from django.contrib import messages
 
 from carts.models import CartItem
 from carts.views import get_cart
 
-from .models import Order, OrderProduct
+from .models import Order, OrderProduct, Payment
 from .forms import OrderForm
 
 
@@ -67,5 +67,25 @@ class PlaceOrderView(LoginRequiredMixin, View):
         return redirect(request.META.get('HTTP_REFERER'))
 
 
-class PaymentView(TemplateView):
-    template_name = 'orders/payment.html'
+class PaymentView(View):
+    def get(self, request):
+        return render(self.request, 'orders/payment.html')
+
+    def post(self, request):
+        body = json.loads(self.request.body)
+        order = Order.objects.get(user=request.user, is_ordered=False, order_number=body['orderID'])
+
+        # Store transaction details inside Payment model
+        payment = Payment(
+            user=self.request.user,
+            payment_id=body['transID'],
+            payment_method=body['payment_method'],
+            amount_paid=order.total,
+            status=body['status']
+        )
+        payment.save()
+        order.payment = payment
+        order.is_ordered = True
+        order.save()
+
+        return render(request, 'orders/payment.html')

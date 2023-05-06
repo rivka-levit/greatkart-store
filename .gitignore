@@ -253,7 +253,7 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 
-/greatkart_project/secret_key.py
+/greatkart_project/secrets.py
 /db.sqlite3
 /.idea/.gitignore
 /.idea/greatkart_project.iml
@@ -263,3 +263,4 @@ fabric.properties
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/vcs.xml
 /.idea/jsLibraryMappings.xml
+/greatkart_project/secrets.py

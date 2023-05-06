@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from .secret_key import secret_key, email_address, email_password
+from .secrets import secret_key, email_address, email_password
 from django.contrib import messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
