@@ -9,7 +9,7 @@ from django.contrib import messages
 from carts.models import CartItem
 from carts.views import get_cart
 
-from .models import Order, OrderProduct, Payment
+from .models import Order, Payment
 from .forms import OrderForm
 
 
