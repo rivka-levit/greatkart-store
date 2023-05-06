@@ -8,8 +8,9 @@ from django.contrib import messages
 
 from carts.models import CartItem
 from carts.views import get_cart
+from store.models import Product
 
-from .models import Order, Payment
+from .models import Order, Payment, OrderProduct
 from .forms import OrderForm
 
 
@@ -87,5 +88,34 @@ class PaymentView(View):
         order.payment = payment
         order.is_ordered = True
         order.save()
+
+        # Move the cart items to Order Product table
+        cart_items = CartItem.objects.filter(user=request.user)
+        for item in cart_items:
+            order_product = OrderProduct()
+            order_product.order = order
+            order_product.payment = payment
+            order_product.user = request.user
+            order_product.product = item.product
+            order_product.is_ordered = True
+            order_product.product_price = item.product.price
+            order_product.quantity = item.quantityK
+            order_product.save()
+
+            product_variations = item.variations.all()
+            order_product = OrderProduct.objects.get(id=order_product.id)
+            order_product.variations.set(product_variations)
+            order_product.save()
+
+        # Reduce the quantity of the sold product
+            product = Product.objects.get(id=item.product_id)
+            product.stock -= item.quantity
+            product.save()
+
+        # Clear cart
+
+        # Send email to the customer
+
+        # Send order number and transaction id back to js script
 
         return render(request, 'orders/payment.html')
