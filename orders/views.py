@@ -48,6 +48,7 @@ class PlaceOrderView(LoginRequiredMixin, View):
             data.country = form.cleaned_data['country']
             data.order_note = form.cleaned_data['order_note']
             data.user = self.request.user
+            data.sub_total = cart.total_cart()
             data.total = cart.grand_total_cart()
             data.tax = cart.tax_cart()
             data.ip = self.request.META.get('REMOTE_ADDR')
@@ -86,7 +87,7 @@ class PaymentView(View):
             payment_id=body['transID'],
             payment_method=body['payment_method'],
             amount_paid=order.total,
-            status='Accepted'
+            status=body['status']
         )
         payment.save()
         order.payment = payment
@@ -140,3 +141,14 @@ class PaymentView(View):
 
 class OrderCompleteView(TemplateView):
     template_name = 'orders/order_complete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderCompleteView, self).get_context_data(**kwargs)
+        order_number = self.request.GET.get('order_number')
+        transaction = self.request.GET.get('transaction')
+        order = Order.objects.get(order_number=order_number, is_ordered=True)
+        context['order_number'] = order.order_number
+        context['payment'] = Payment.objects.get(payment_id=transaction)
+        context['order'] = order
+        context['order_products'] = OrderProduct.objects.filter(order=order)
+        return context
