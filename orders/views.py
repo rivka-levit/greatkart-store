@@ -99,7 +99,7 @@ class PaymentView(View):
             order_product.product = item.product
             order_product.is_ordered = True
             order_product.product_price = item.product.price
-            order_product.quantity = item.quantityK
+            order_product.quantity = item.quantity
             order_product.save()
 
             product_variations = item.variations.all()
