@@ -1,10 +1,14 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.views import View
+from django.views.generic import TemplateView
 import datetime
 import json
 from django.contrib import messages
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 from carts.models import CartItem
 from carts.views import get_cart
@@ -82,7 +86,7 @@ class PaymentView(View):
             payment_id=body['transID'],
             payment_method=body['payment_method'],
             amount_paid=order.total,
-            status=body['status']
+            status='Accepted'
         )
         payment.save()
         order.payment = payment
@@ -107,15 +111,32 @@ class PaymentView(View):
             order_product.variations.set(product_variations)
             order_product.save()
 
-        # Reduce the quantity of the sold product
+            # Reduce the quantity of the sold product
             product = Product.objects.get(id=item.product_id)
             product.stock -= item.quantity
             product.save()
 
         # Clear cart
+        CartItem.objects.filter(user=request.user).delete()
 
         # Send email to the customer
+        mail_subject = 'Thank you for your order!'
+        message = render_to_string('orders/order_received_email.html', {
+            'user': self.request.user,
+            'order': order
+        })
+        to_email = request.user.email
+        send_email = EmailMessage(mail_subject, message, to=[to_email])
+        send_email.send()
 
         # Send order number and transaction id back to js script
+        data = {
+            'order_number': order.order_number,
+            'trans_id': payment.payment_id
+        }
 
-        return render(request, 'orders/payment.html')
+        return JsonResponse(data)
+
+
+class OrderCompleteView(TemplateView):
+    template_name = 'orders/order_complete.html'

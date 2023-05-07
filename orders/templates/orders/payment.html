@@ -151,6 +151,7 @@
     const url = '{% url 'orders:payment' %}';
     const csrftoken = getCookie('csrftoken');
     const payment_method = 'PayPal'
+    const redirect_url = '{% url 'orders:order_complete' %}'
 
     // Render the PayPal button into #paypal-button-container
     paypal.Buttons({
@@ -191,8 +192,10 @@
                             status: details.status
                         }),
                     })
-                    {#.then(response => response.json())#}
-                    {#.then(data => console.log('Success: ', data));#}
+                    .then((response) => response.json())
+                    .then((data) => {
+                        window.location.href = redirect_url + '?order_number=' + data.order_number + '&transaction=' + data.trans_id
+                    });
                 }
             });
         }
