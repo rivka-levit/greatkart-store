@@ -1,6 +1,7 @@
 from django.views.generic import ListView, View
 from carts.views import get_cart
 from .models import Product, Variation
+from .forms import ReviewForm
 from category.models import Category
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
@@ -31,8 +32,10 @@ class StoreView(ListView):
 class ProductDetailView(View):
     def get(self, request, category_slug, product_slug):
         product = Product.objects.get(category__slug=category_slug, slug=product_slug)
+        form = ReviewForm()
         context = {
-            'product': product
+            'product': product,
+            'form': form
         }
         return render(request, 'store/product-detail.html', context)
 
