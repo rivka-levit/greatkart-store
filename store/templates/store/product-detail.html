@@ -6,6 +6,7 @@
 <div class="container">
 
 <!-- ============================ COMPONENT 1 ================================= -->
+{% include 'accounts/includes/alerts.html' %}
 <div class="card">
 	<div class="row no-gutters">
 		<aside class="col-md-6">
@@ -85,7 +86,7 @@
 		
 	</header>
 
-    <form action="" method="post">
+    <form action="{% url 'store:product_detail' product.category.slug product.slug %}" method="post">
         {% csrf_token %}
 {#        <h5>Write Your Review</h5>#}
         <div>
@@ -110,7 +111,7 @@
 {#            <label for="review_text" class="font-weight-bold">Review:</label>#}
             <textarea class="form-control mb-4" name="review" rows="4" id="review_text" placeholder="Review..."></textarea>
 
-            <input class="btn btn-outline-primary mb-4" type="submit" value="Submit Review">
+            <input class="btn btn-outline-primary mb-4" type="submit" value="Submit Review" name="review_submitted">
         </div>
     </form>
 

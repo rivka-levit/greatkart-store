@@ -35,9 +35,8 @@ input:checked ~ label, label:hover ~ label {
     color: #ffb503;
 }
 
+/* Hover highlight */
 input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label,
 label:hover ~ input:checked ~ label {
     color: #cc9000;
 }
-
-/* Hover highlight */

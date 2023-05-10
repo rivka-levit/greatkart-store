@@ -1,11 +1,12 @@
 from django.views.generic import ListView, View
 from carts.views import get_cart
-from .models import Product, Variation
+from .models import Product, Variation, ReviewRating
 from .forms import ReviewForm
 from category.models import Category
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
 from carts.models import CartItem
+from django.contrib import messages
 
 
 class StoreView(ListView):
@@ -32,15 +33,21 @@ class StoreView(ListView):
 class ProductDetailView(View):
     def get(self, request, category_slug, product_slug):
         product = Product.objects.get(category__slug=category_slug, slug=product_slug)
-        form = ReviewForm()
+        reviews = ReviewRating.objects.filter(product=product)
         context = {
             'product': product,
-            'form': form
+            'reviews': reviews
         }
         return render(request, 'store/product-detail.html', context)
 
     def post(self, request, category_slug, product_slug):
         product = Product.objects.get(category__slug=category_slug, slug=product_slug)
+
+        # Handle reviews
+        if request.POST.get('review_submitted'):
+            return self.__review_rating(self.request, product)
+
+        # Adding product to the cart
         product_variations = list()
         for key, value in request.POST.items():
             try:
@@ -80,6 +87,27 @@ class ProductDetailView(View):
         item.save()
 
         return redirect(self.request.META['HTTP_REFERER'])
+
+    @staticmethod
+    def __review_rating(request, product):
+        try:
+            review = ReviewRating.objects.get(product_id=product.id)
+            form = ReviewForm(request.POST, instance=review)
+            form.save()
+            messages.success(request, 'Thank you! Your review has been updated.')
+        except ReviewRating.DoesNotExist:
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                data = ReviewRating()
+                data.product = product
+                data.user = request.user
+                data.subject = form.cleaned_data['subject']
+                data.review = form.cleaned_data['review']
+                data.rating = form.cleaned_data['rating']
+                data.ip = request.META.get('REMOTE_ADDR')
+                data.save()
+                messages.success(request, 'Thank you! Your review has been submitted.')
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 class SearchResultsView(ListView):
