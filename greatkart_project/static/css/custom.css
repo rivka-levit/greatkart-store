@@ -31,7 +31,7 @@
 }
 
 /* Click and hover */
-input:checked ~ label, label:hover ~ label {
+input:checked:not([name=paypal]) ~ label:not([name=paypal]), label:hover:not([name=paypal]) ~ label:not([name=paypal]) {
     color: #ffb503;
 }
 
@@ -39,4 +39,8 @@ input:checked ~ label, label:hover ~ label {
 input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label,
 label:hover ~ input:checked ~ label {
     color: #cc9000;
+}
+
+.rating-st i {
+    color: #ffb503;
 }

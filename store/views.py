@@ -3,6 +3,7 @@ from carts.views import get_cart
 from .models import Product, Variation, ReviewRating
 from .forms import ReviewForm
 from category.models import Category
+from orders.models import OrderProduct
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
 from carts.models import CartItem
@@ -33,10 +34,16 @@ class StoreView(ListView):
 class ProductDetailView(View):
     def get(self, request, category_slug, product_slug):
         product = Product.objects.get(category__slug=category_slug, slug=product_slug)
-        reviews = ReviewRating.objects.filter(product=product)
+        user = request.user
+        if user.id:
+            order_product = OrderProduct.objects.filter(product_id=product.id, user=request.user, is_ordered=True)
+        else:
+            order_product = None
+        reviews = ReviewRating.objects.filter(product=product, status=True)
         context = {
             'product': product,
-            'reviews': reviews
+            'reviews': reviews,
+            'order_product': order_product
         }
         return render(request, 'store/product-detail.html', context)
 
@@ -45,7 +52,7 @@ class ProductDetailView(View):
 
         # Handle reviews
         if request.POST.get('review_submitted'):
-            return self.__review_rating(self.request, product)
+            return self.__review_rating(request, product)
 
         # Adding product to the cart
         product_variations = list()
@@ -91,7 +98,7 @@ class ProductDetailView(View):
     @staticmethod
     def __review_rating(request, product):
         try:
-            review = ReviewRating.objects.get(product_id=product.id)
+            review = ReviewRating.objects.get(product_id=product.id, user=request.user)
             form = ReviewForm(request.POST, instance=review)
             form.save()
             messages.success(request, 'Thank you! Your review has been updated.')
