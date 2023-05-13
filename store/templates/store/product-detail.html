@@ -25,6 +25,23 @@
     
     <h2 class="title">{{ product.product_name }}</h2>
 
+    {% if product.average_rating %}
+    <div class="rating-st mb-3">
+        <span>
+            <i class="fa-{% if product.average_rating < 1 %}regular fa-star{% if product.average_rating >= 0.5 %}-half-stroke{% endif %}
+                {% else %}solid fa-star{% endif %}"></i>
+            <i class="fa-{% if product.average_rating < 2 %}regular fa-star{% if product.average_rating >= 1.5 %}-half-stroke{% endif %}
+                {% else %}solid fa-star{% endif %}"></i>
+            <i class="fa-{% if product.average_rating < 3 %}regular fa-star{% if product.average_rating >= 2.5 %}-half-stroke{% endif %}
+                {% else %}solid fa-star{% endif %}"></i>
+            <i class="fa-{% if product.average_rating < 4 %}regular fa-star{% if product.average_rating >= 3.5 %}-half-stroke{% endif %}
+                {% else %}solid fa-star{% endif %}"></i>
+            <i class="fa-{% if product.average_rating < 5 %}regular fa-star{% if product.average_rating >= 4.5 %}-half-stroke{% endif %}
+                {% else %}solid fa-star{% endif %}"></i>
+        </span>
+    </div>
+    {% endif %}
+
     <div class="mb-3">
         <var class="price h4">$ {{ product.price|floatformat:'2g' }}</var>
     </div>

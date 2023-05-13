@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Avg
+
 from category.models import Category
 from accounts.models import Account
 
@@ -21,6 +23,13 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name
+
+    def average_rating(self):
+        reviews = ReviewRating.objects.filter(product=self, status=True)\
+            .aggregate(average=Avg('rating'))
+        if reviews['average']:
+            return float(reviews['average'])
+        return None
 
 
 class VariationManager(models.Manager):
