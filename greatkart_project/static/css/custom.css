@@ -44,3 +44,9 @@ label:hover ~ input:checked ~ label {
 .rating-st i {
     color: #ffb503;
 }
+
+.avatar {
+    margin-bottom: 5px;
+    width: 50px;
+    border-radius: 50%;
+}

@@ -4,6 +4,7 @@ from .forms import RegistrationForm
 from .models import Account
 from carts.models import CartItem
 from carts.views import get_cart
+from orders.models import Order
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib import auth
@@ -208,3 +209,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/dashboard.html'
     login_url = '/accounts/login/'
     redirect_field_name = 'redirect_to'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['orders_count'] = Order.objects.filter(user=self.request.user, is_ordered=True).count()
+        return context
