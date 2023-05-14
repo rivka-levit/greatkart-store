@@ -1,5 +1,6 @@
 from django.views import View
 from django.views.generic.base import TemplateView
+from django.views.generic import ListView
 from .forms import RegistrationForm
 from .models import Account
 from carts.models import CartItem
@@ -212,6 +213,23 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['orders_count'] = Order.objects.filter(user=self.request.user, is_ordered=True).count()
+        context['orders_count'] = Order.objects.filter(
+            user=self.request.user,
+            is_ordered=True
+        ).count()
         return context
 
+
+class MyOrdersView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'accounts/my_orders.html'
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
+    context_object_name = 'orders'
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        return super(MyOrdersView, self).get_queryset().filter(
+            user=self.request.user,
+            is_ordered=True
+        )
