@@ -39,6 +39,7 @@
             <i class="fa-{% if product.average_rating < 5 %}regular fa-star{% if product.average_rating >= 4.5 %}-half-stroke{% endif %}
                 {% else %}solid fa-star{% endif %}"></i>
         </span>
+        <span class="ml-2">{{ product.count_reviews }} reviews</span>
     </div>
     {% endif %}
 

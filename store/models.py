@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, Count
 
 from category.models import Category
 from accounts.models import Account
@@ -29,6 +29,12 @@ class Product(models.Model):
             .aggregate(average=Avg('rating'))
         if reviews['average']:
             return float(reviews['average'])
+        return None
+
+    def count_reviews(self):
+        reviews = ReviewRating.objects.filter(product=self, status=True).aggregate(count=Count('id'))
+        if reviews['count']:
+            return int(reviews['count'])
         return None
 
 
