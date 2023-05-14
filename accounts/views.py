@@ -214,3 +214,4 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['orders_count'] = Order.objects.filter(user=self.request.user, is_ordered=True).count()
         return context
+
