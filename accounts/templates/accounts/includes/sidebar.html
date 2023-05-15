@@ -9,8 +9,8 @@
                href="{% url 'accounts:my_orders' %}">
                 My Orders
             </a>
-			<a class="list-group-item {% if '/edit_profile/' in request.path %}active{% endif %}"
-               href="#">
+			<a class="list-group-item {% if '/profile/' in request.path %}active{% endif %}"
+               href="{% url 'accounts:profile' %}">
                 Edit Profile
             </a>
 			<a class="list-group-item {% if '/change_password/' in request.path %}active{% endif %}"

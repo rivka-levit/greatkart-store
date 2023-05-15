@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import RegisterView, LoginView, logout, activate, DashboardView
 from .views import ResetPassword, ForgotPassword, reset_password_validate
-from .views import MyOrdersView
+from .views import MyOrdersView, ProfileView
 
 app_name = 'accounts'
 
@@ -16,4 +16,5 @@ urlpatterns = [
          name='reset_password_validate'),
     path('reset_password/', ResetPassword.as_view(), name='reset_password'),
     path('my_orders/', MyOrdersView.as_view(), name='my_orders'),
+    path('profile/', ProfileView.as_view(), name='profile'),
 ]

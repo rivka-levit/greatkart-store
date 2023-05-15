@@ -233,3 +233,8 @@ class MyOrdersView(LoginRequiredMixin, ListView):
             user=self.request.user,
             is_ordered=True
         )
+
+
+class ProfileView(View):
+    def get(self, request):
+        return render(request, 'accounts/profile.html')
