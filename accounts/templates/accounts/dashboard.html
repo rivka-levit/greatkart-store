@@ -31,7 +31,7 @@
                 <div class="col-md-6">
                     <div class="card" style="text-align: center; min-height: 140px">
                         <div class="card-body">
-                            <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Avatar" class="avatar">
+                            <img src="{{ user.profile.profile_picture.url }}" alt="Avatar" class="avatar">
                             <p class="mb-0">{{ user.email }}</p>
                             <p>{{ user.phone_number }}</p>
                         </div>

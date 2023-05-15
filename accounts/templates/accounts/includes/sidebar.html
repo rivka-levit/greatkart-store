@@ -13,11 +13,16 @@
                href="#">
                 Edit Profile
             </a>
-{#		<a class="btn btn-light btn-block" href="{% url 'accounts:logout' %}">#}
 			<a class="list-group-item {% if '/change_password/' in request.path %}active{% endif %}"
                href="#">
                 Change Password
             </a>
+        {% if user.is_admin %}
+            <a class="list-group-item {% if '/admin/' in request.path %}active{% endif %}"
+               href="{% url 'admin:index' %}">
+                Admin Panel
+            </a>
+        {% endif %}
 		</div>
 		<br>
 		<a class="btn btn-light btn-block" href="{% url 'accounts:logout' %}">
