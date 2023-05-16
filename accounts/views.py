@@ -57,6 +57,7 @@ class RegisterView(View):
 
             # Create user profile
             user_profile = UserProfile(user=user)
+            user_profile.profile_picture = 'default/default_avatar.jpg'
             user_profile.save()
 
             return redirect(f'/accounts/login/?command=verification&email={email}')
