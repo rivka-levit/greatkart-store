@@ -17,52 +17,55 @@
 			<strong class="d-inline-block mr-3">Edit Your Profile</strong>
 		</header>
 		<div class="card-body">
+            <div class="text-center mb-3">
+                <img src="{{ user_profile.get_photo_url }}" alt="Profile Picture" width="100" style="border-radius: 50%">
+            </div>
             <div class="row">
                 <div class="col-md-12">
-                    <form action="" method="post">
+                    <form action="{% url 'accounts:profile' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="form-row">
                             <div class="col-md-6 form-group">
                                 <label>First Name: </label>
-                                <input type="text" class="form-control">
+                                {{ user_form.first_name }}
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Last Name: </label>
-                                <input type="text" class="form-control">
+                                {{ user_form.last_name }}
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 form-group">
                                 <label>Phone Number: </label>
-                                <input type="text" class="form-control">
+                                {{ user_form.phone_number }}
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Profile Picture: </label>
-                                <input type="file" class="form-control">
+                                {{ profile_form.profile_picture }}
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 form-group">
                                 <label>Address Line 1: </label>
-                                <input type="text" class="form-control">
+                                {{ profile_form.address_line_1 }}
                             </div>
                         <div class="col-md-6 form-group">
                             <label>Address Line 2: </label>
-                            <input type="text" class="form-control">
+                            {{ profile_form.address_line_2 }}
                         </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-4 form-group">
                                 <label>City: </label>
-                                <input type="text" class="form-control">
+                                {{ profile_form.city }}
                             </div>
                             <div class="col-md-4 form-group">
                                 <label>State: </label>
-                                <input type="text" class="form-control">
+                                {{ profile_form.state }}
                             </div>
                             <div class="col-md-4 form-group">
                                 <label>Country: </label>
-                                <input type="text" class="form-control">
+                                {{ profile_form.country }}
                             </div>
                         </div>
                         <div class="text-center">

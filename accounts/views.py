@@ -1,12 +1,12 @@
 from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.generic import ListView
-from .forms import RegistrationForm
-from .models import Account
+from .forms import RegistrationForm, UserForm, UserProfileForm
+from .models import Account, UserProfile
 from carts.models import CartItem
 from carts.views import get_cart
 from orders.models import Order
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -237,4 +237,24 @@ class MyOrdersView(LoginRequiredMixin, ListView):
 
 class ProfileView(View):
     def get(self, request):
-        return render(request, 'accounts/profile.html')
+        user_profile = get_object_or_404(UserProfile, user=request.user)
+        user_form = UserForm(instance=request.user)
+        profile_form = UserProfileForm(instance=user_profile)
+        context = {
+            'user_form': user_form,
+            'profile_form': profile_form,
+            'user_profile': user_profile
+        }
+        return render(request, 'accounts/profile.html', context)
+
+    def post(self, request):
+        user_profile = get_object_or_404(UserProfile, user=request.user)
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile has been updated.')
+            return redirect('accounts:profile')
+        messages.error(request, 'Invalid input! Please, check your information.')
+        return redirect('accounts:profile')
