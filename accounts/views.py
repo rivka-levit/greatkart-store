@@ -238,7 +238,10 @@ class MyOrdersView(LoginRequiredMixin, ListView):
         )
 
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, View):
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
+
     def get(self, request):
         user_profile = get_object_or_404(UserProfile, user=request.user)
         user_form = UserForm(instance=request.user)
@@ -253,16 +256,44 @@ class ProfileView(View):
     def post(self, request):
         user_profile = get_object_or_404(UserProfile, user=request.user)
         user_form = UserForm(request.POST, instance=request.user)
-        profile_form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        profile_form = UserProfileForm(request.POST, request.FILES,
+                                       instance=user_profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
             messages.success(request, 'Your profile has been updated.')
             return redirect('accounts:profile')
-        messages.error(request, 'Invalid input! Please, check your information.')
+        messages.error(request, 'Invalid input! Please, check your '
+                                'information.')
         return redirect('accounts:profile')
 
 
-class ChangePasswordView(View):
+class ChangePasswordView(LoginRequiredMixin, View):
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
+
     def get(self, request):
         return render(request, 'accounts/change_password.html')
+
+    def post(self, request):
+        current_password = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if new_password != confirm_password:
+            messages.error(request, 'Password does not match!')
+
+            return redirect(request.META.get('HTTP_REFERER'))
+
+        user = Account.objects.get(username__exact=request.user.username)
+
+        if user.check_password(current_password):
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, 'Password has been updated '
+                                      'successfully.')
+
+            return redirect('accounts:change_password')
+
+        messages.error(request, 'Please, enter valid current password!')
+        return redirect(request.META.get('HTTP_REFERER'))
