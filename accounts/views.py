@@ -261,3 +261,8 @@ class ProfileView(View):
             return redirect('accounts:profile')
         messages.error(request, 'Invalid input! Please, check your information.')
         return redirect('accounts:profile')
+
+
+class ChangePasswordView(View):
+    def get(self, request):
+        return render(request, 'accounts/change_password.html')
