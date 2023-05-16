@@ -55,8 +55,10 @@ class RegisterView(View):
             send_email = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
 
-            # messages.success(request, 'Thank you! We have sent a verification '
-            #                           'link to your email address. Please, verify it!')
+            # Create user profile
+            user_profile = UserProfile(user=user)
+            user_profile.save()
+
             return redirect(f'/accounts/login/?command=verification&email={email}')
         if form.errors.get('__all__'):
             messages.add_message(request, messages.ERROR, form.errors['__all__'])
