@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 import datetime
 import json
 from django.contrib import messages
@@ -151,4 +151,18 @@ class OrderCompleteView(TemplateView):
         context['payment'] = Payment.objects.get(payment_id=transaction)
         context['order'] = order
         context['order_products'] = OrderProduct.objects.filter(order=order)
+        return context
+
+
+class OrderDetailView(DetailView):
+    model = Order
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+
+        order_id = self.kwargs.get('pk')
+        order = Order.objects.get(id=order_id)
+
+        context['order_products'] = OrderProduct.objects.filter(order=order)
+
         return context
