@@ -29,15 +29,15 @@
                       </thead>
                       <tbody>
                       {% for order in orders %}
-
-                            <tr>
-
-                              <th scope="row"><a href="{% url 'orders:order_detail' order.id %}">{{ order.order_number }}</a></th>
-                              <td>{{ order.created_at|date:'d/m/Y' }} at {{ order.created_at|time:'H:i' }}</td>
-                              <td>$ {{ order.total }}</td>
-
-                            </tr>
-
+                        <tr>
+                          <th scope="row">
+                            <a href="{% url 'orders:order_detail' order.id %}">
+                              {{ order.order_number }}
+                            </a>
+                          </th>
+                          <td>{{ order.created_at|date:'d/m/Y' }} at {{ order.created_at|time:'H:i' }}</td>
+                          <td>$ {{ order.total }}</td>
+                        </tr>
                       {% endfor %}
                       </tbody>
                     </table>
