@@ -154,15 +154,14 @@ class OrderCompleteView(TemplateView):
         return context
 
 
-class OrderDetailView(DetailView):
+class OrderDetailView(LoginRequiredMixin, DetailView):
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
     model = Order
 
     def get_context_data(self, **kwargs):
         context = super(OrderDetailView, self).get_context_data(**kwargs)
-
         order_id = self.kwargs.get('pk')
         order = Order.objects.get(id=order_id)
-
         context['order_products'] = OrderProduct.objects.filter(order=order)
-
         return context
