@@ -12,12 +12,15 @@
 		<aside class="col-md-6">
 <article class="gallery-wrap"> 
 	<div class="img-big-wrap main-image">
-	   <img src="{{ product.images.url }}">
+	   <center><img src="{{ product.images.url }}"></center>
 	</div> <!-- img-big-wrap.// -->
 	
 </article> <!-- gallery-wrap .end// -->
 <ul class="thumb">
     <li>
+        <a href="{{ product.images.url }}" target="main-image">
+            <img src="{{ product.images.url }}" alt="Product Image">
+        </a>
         {% for item in product_gallery %}
             <a href="{{ item.image.url }}" target="main-image">
                 <img src="{{ item.image.url }}" alt="Product Image">
