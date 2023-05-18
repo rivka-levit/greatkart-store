@@ -1,6 +1,6 @@
 from django.views.generic import ListView, View
 from carts.views import get_cart
-from .models import Product, Variation, ReviewRating
+from .models import Product, Variation, ReviewRating, ProductGallery
 from .forms import ReviewForm
 from category.models import Category
 from orders.models import OrderProduct
@@ -40,10 +40,12 @@ class ProductDetailView(View):
         else:
             order_product = None
         reviews = ReviewRating.objects.filter(product=product, status=True)
+        product_gallery = ProductGallery.objects.filter(product=product)
         context = {
             'product': product,
             'reviews': reviews,
-            'order_product': order_product
+            'order_product': order_product,
+            'product_gallery': product_gallery
         }
         return render(request, 'store/product-detail.html', context)
 
