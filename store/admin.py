@@ -2,10 +2,16 @@ from django.contrib import admin
 from .models import Product, Variation, ReviewRating, ProductGallery
 
 
+class ProductGalleryInline(admin.TabularInline):
+    model = ProductGallery
+    extra = 1
+
+
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'price', 'stock', 'category',
                     'modified_date', 'is_available')
     prepopulated_fields = {'slug': ('product_name',)}
+    inlines = [ProductGalleryInline]
 
 
 class VariationAdmin(admin.ModelAdmin):
@@ -19,11 +25,7 @@ class ReviewRatingAdmin(admin.ModelAdmin):
     readonly_fields = ('ip', 'created_at', 'updated_at')
 
 
-class ProductGalleryAdmin(admin.ModelAdmin):
-    list_display = ('product',)
-
-
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Variation, VariationAdmin)
 admin.site.register(ReviewRating, ReviewRatingAdmin)
-admin.site.register(ProductGallery, ProductGalleryAdmin)
+admin.site.register(ProductGallery)
