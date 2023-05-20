@@ -1,6 +1,6 @@
-from .secrets import app_client_id
+from decouple import config
 
 
 def client(request):
-    client_id = app_client_id
+    client_id = config('app_client_id')
     return dict(clientID=client_id)
