@@ -62,20 +62,34 @@ class PlaceOrderView(LoginRequiredMixin, View):
             data.order_number = order_number
             data.save()
 
-            return render(request, 'orders/payment.html', context={
-                'order': Order.objects.get(user=self.request.user,
-                                           is_ordered=False,
-                                           order_number=order_number),
-                'cart_items': CartItem.objects.filter(cart=cart, user=request.user)
-            })
+            # Send order number to Payment View
+            request.session['order_number'] = order_number
+
+            return redirect('orders:payment')
 
         messages.error(self.request, 'Invalid delivery information!')
         return redirect(request.META.get('HTTP_REFERER'))
 
 
-class PaymentView(View):
+class PaymentView(LoginRequiredMixin, View):
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
+
     def get(self, request):
-        return render(self.request, 'orders/payment.html')
+        try:
+            order_number = request.session.get('order_number')
+            order = Order.objects.get(user=request.user,
+                                      is_ordered=False,
+                                      order_number=order_number)
+        except Order.DoesNotExist:
+            messages.error(request, 'You have not placed any order yet!')
+            return redirect('cart:detail')
+
+        cart_items = CartItem.objects.filter(user=request.user)
+        return render(self.request, 'orders/payment.html', context={
+            'order': order,
+            'cart_items': cart_items
+        })
 
     def post(self, request):
         body = json.loads(self.request.body)
