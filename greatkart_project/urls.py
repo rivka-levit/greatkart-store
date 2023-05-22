@@ -21,7 +21,8 @@ from .views import HomeView
 from . import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', include('admin_honeypot.urls')),
+    path('secureadmin/', admin.site.urls),
     path('', HomeView.as_view(), name='home'),
     path('store/', include('store.urls', namespace='store')),
     path('cart/', include('carts.urls', namespace='cart')),
