@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic import ListView
 from .forms import RegistrationForm, UserForm, UserProfileForm
 from .models import Account, UserProfile
-from carts.models import CartItem
+from carts.models import CartItem, Cart
 from carts.views import get_cart
 from orders.models import Order
 from django.shortcuts import redirect, render, get_object_or_404
@@ -20,6 +20,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
+
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.dispatch import receiver
 
 
 class RegisterView(View):
@@ -127,6 +130,19 @@ def logout(request):
     auth.logout(request)
     messages.success(request, 'You have logged out successfully')
     return redirect('accounts:login')
+
+
+@receiver(user_logged_out)
+def _user_logged_out(sender, user, request, **kwargs):
+    # Delete the cart of the user that logged out
+
+    cart_id = request.session.session_key
+    if cart_id:
+        try:
+            cart = Cart.objects.get(cart_id=cart_id)
+            cart.delete()
+        except Cart.DoesNotExist:
+            pass
 
 
 def activate(request, uidb64, token):
