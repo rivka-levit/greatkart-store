@@ -21,9 +21,6 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 
-from django.contrib.auth.signals import user_logged_in, user_logged_out
-from django.dispatch import receiver
-
 
 class RegisterView(View):
     def get(self, request, *args, **kwargs):
@@ -86,11 +83,17 @@ class LoginView(View):
             cart = get_cart(request)
             cart_items = CartItem.objects.filter(cart=cart)
             user_items = CartItem.objects.filter(user=user)
+
             if cart_items.exists():
                 u_items_to_del = list()
-                for item in cart_items:         # Loop through anonymous user items
+
+                # Loop through anonymous user items
+                for item in cart_items:
+
                     if user_items.exists():
-                        for u_item in user_items:   # Loop through authenticated user items
+
+                        # Loop through authenticated user items
+                        for u_item in user_items:
 
                             # Find the same item with the same variations
                             if u_item.product == item.product and \
@@ -110,6 +113,7 @@ class LoginView(View):
                 if u_items_to_del:
                     for ui in u_items_to_del:
                         ui.delete()
+
             auth.login(request, user)
             messages.success(request, 'You have logged in successfully!')
             url = request.META.get('HTTP_REFERER')
@@ -128,19 +132,6 @@ def logout(request):
     auth.logout(request)
     messages.success(request, 'You have logged out successfully')
     return redirect('accounts:login')
-
-
-# @receiver(user_logged_out)
-# def _user_logged_out(sender, user, request, **kwargs):
-#     # Delete the cart of the user that logged out
-#
-#     cart_id = request.session.session_key
-#     if cart_id:
-#         try:
-#             cart = Cart.objects.get(cart_id=cart_id)
-#             cart.delete()
-#         except Cart.DoesNotExist:
-#             pass
 
 
 def activate(request, uidb64, token):
