@@ -56,7 +56,7 @@ class ProductDetailView(View):
         if request.POST.get('review_submitted'):
             return self.__review_rating(request, product)
 
-        # Adding product to the cart
+        # Get product variations from post request
         product_variations = set()
         for key, value in request.POST.items():
             try:
@@ -68,24 +68,26 @@ class ProductDetailView(View):
                 pass
 
         cart = get_cart(request)
-        if CartItem.objects.filter(product=product, cart=cart).exists():
-            cart_items = CartItem.objects.filter(product=product, cart=cart)
-            if any(product_variations == set(x.variations.all()) for x in cart_items):
-                for i in cart_items:
-                    if product_variations == set(i.variations.all()):
-                        item = CartItem.objects.get(product=product, id=i.id)
-                        break
-            else:
-                item = CartItem.objects.create(product=product, cart=cart)
-                if product_variations:
-                    item.variations.add(*product_variations)
-        else:
+        cart_items = CartItem.objects.filter(product=product, cart=cart)
+        item = None
+
+        # Look if there is a repeating item in the cart
+        for i in cart_items:
+            if i.product == product and product_variations == set(i.variations.all()):
+                item = CartItem.objects.get(product=product, id=i.id)
+                break
+
+        # If there is not a repeating item, create a new one
+        if not item:
             item = CartItem.objects.create(product=product, cart=cart)
             if product_variations:
                 item.variations.add(*product_variations)
+
+        # Assign the user to the item
         user = request.user
         if user.is_authenticated:
             item.user = user
+
         item.quantity += 1
         item.save()
 
