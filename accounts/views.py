@@ -132,17 +132,17 @@ def logout(request):
     return redirect('accounts:login')
 
 
-@receiver(user_logged_out)
-def _user_logged_out(sender, user, request, **kwargs):
-    # Delete the cart of the user that logged out
-
-    cart_id = request.session.session_key
-    if cart_id:
-        try:
-            cart = Cart.objects.get(cart_id=cart_id)
-            cart.delete()
-        except Cart.DoesNotExist:
-            pass
+# @receiver(user_logged_out)
+# def _user_logged_out(sender, user, request, **kwargs):
+#     # Delete the cart of the user that logged out
+#
+#     cart_id = request.session.session_key
+#     if cart_id:
+#         try:
+#             cart = Cart.objects.get(cart_id=cart_id)
+#             cart.delete()
+#         except Cart.DoesNotExist:
+#             pass
 
 
 def activate(request, uidb64, token):
