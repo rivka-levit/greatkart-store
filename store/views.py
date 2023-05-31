@@ -57,28 +57,22 @@ class ProductDetailView(View):
             return self.__review_rating(request, product)
 
         # Adding product to the cart
-        product_variations = list()
+        product_variations = set()
         for key, value in request.POST.items():
             try:
                 variation = Variation.objects.get(product=product,
                                                   variation_category__iexact=key,
                                                   variation_value__iexact=value)
-                product_variations.append(variation)
+                product_variations.add(variation)
             except:
                 pass
 
         cart = get_cart(request)
         if CartItem.objects.filter(product=product, cart=cart).exists():
             cart_items = CartItem.objects.filter(product=product, cart=cart)
-            if any(sorted(product_variations,
-                          key=lambda x: x.variation_category) ==
-                   sorted(list(x.variations.all()),
-                          key=lambda y: y.variation_category) for x in cart_items):
+            if any(product_variations == set(x.variations.all()) for x in cart_items):
                 for i in cart_items:
-                    if sorted(product_variations,
-                              key=lambda x: x.variation_category) == \
-                        sorted(list(i.variations.all()),
-                               key=lambda x: x.variation_category):
+                    if product_variations == set(i.variations.all()):
                         item = CartItem.objects.get(product=product, id=i.id)
                         break
             else:
