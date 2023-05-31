@@ -94,10 +94,8 @@ class LoginView(View):
 
                             # Find the same item with the same variations
                             if u_item.product == item.product and \
-                                    sorted(list(u_item.variations.all()),
-                                           key=lambda x: x.variation_category) == \
-                                    sorted(list(item.variations.all()),
-                                           key=lambda x: x.variation_category):
+                                    set(u_item.variations.all()) == \
+                                    set(item.variations.all()):
 
                                 # Quantity of both identical items to one of them
                                 item.quantity += u_item.quantity
