@@ -14,7 +14,6 @@
                         {% if product.stock > 0 %}
                         <div class="price-wrap mt-2">
                             <span class="price">$ {{ product.price|floatformat:'2g' }}</span>
-{#                            <del class="price-old">$1980</del>#}
                         </div> <!-- price-wrap.// -->
                         {% else %}
                             <h6 class="mt-2 text-muted">Out of Stock</h6>
@@ -24,22 +23,6 @@
                        class="btn btn-block btn-outline-primary">
                             View Details
                     </a>
-{#                    {% if product.stock > 0 %}#}
-{#                        {% if product in products_in_cart %}#}
-{#                            <a href="{% url 'store:product_detail' product.category.slug product.slug %}"#}
-{#                               class="btn btn-block btn-success disabled"> <span class="text">#}
-{#                                    Added to Cart#}
-{#                                </span>#}
-{#                            </a>#}
-{#                        {% else %}#}
-{#                            <a href="{% url 'cart:add_cart' product.id %}"#}
-{#                               class="btn btn-block btn-primary">#}
-{#                                Add to Cart#}
-{#                            </a>#}
-{#                        {% endif %}#}
-{#                    {% else %}#}
-{#                        <h5 class="text-muted text-center">Out of Stock</h5>#}
-{#                    {% endif %}#}
                 </figcaption>
             </figure>
         </div> <!-- col.// -->
