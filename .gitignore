@@ -12073,3 +12073,8 @@ fabric.properties
 /static/fonts/fontawesome/webfonts/fa-v4compatibility.woff2
 /static/fonts/fontawesome/LICENSE.txt
 /static/images/avatars/avat.jpg
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
