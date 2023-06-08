@@ -15,8 +15,9 @@ class CartView(ListView):
 
 
 def _cart_id(request):
-    cart = request.session.session_key
-    if not cart:
+    try:
+        cart = request.session.session_key
+    except:
         cart = request.session.create()
     return cart
 
