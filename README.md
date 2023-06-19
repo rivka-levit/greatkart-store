@@ -14,9 +14,6 @@ EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
 EMAIL_USE_TLS=
 app_client_id=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_STORAGE_BUCKET_NAME=
 ```
 
 Write your keys next to '=' without quotes and spaces.
